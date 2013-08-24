@@ -20,6 +20,7 @@
 			y: 0,
 			isDown: false
 		},
+		isTouch = "ontouchstart" in window || window.DocumentTouch && document instanceof DocumentTouch,
 		count = 0,
 		ninetyDegrees = toRadians(90),
 		flies = [];
@@ -133,14 +134,14 @@
 		flies.push(new Fly());
 	}
 
-	canvas.addEventListener('mousemove', function (e) {
-		mouse.x = e.pageX - (canvas.offsetLeft - canvas.scrollLeft);
-		mouse.y = e.pageY - (canvas.offsetTop - canvas.scrollTop);
-	});
-	canvas.addEventListener('mousedown', function () {
+	window.addEventListener(isTouch ? 'touchstart' : 'mousedown', function (e) {
+		e.preventDefault();
+		var pointer = isTouch ? e.touches[0] : e;
+		mouse.x = pointer.pageX - (canvas.offsetLeft - canvas.scrollLeft);
+		mouse.y = pointer.pageY - (canvas.offsetTop - canvas.scrollTop);
 		mouse.isDown = true;
 	});
-	canvas.addEventListener('mouseup', function () {
+	window.addEventListener(isTouch ? 'touchend' : 'mouseup', function () {
 		mouse.isDown = false;
 	});
 
@@ -153,6 +154,7 @@
 
 		setTimeout(render, 3000);
 	};
+
 
 
 }())
